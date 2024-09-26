@@ -1,0 +1,16 @@
+#list iptables
+iptables -t nat -L -n -v
+
+iptables -t nat -A PREROUTING -p tcp -s 192.168.1.191 -j REDIRECT --to-port 1008
+#iptables -t nat -A OUTPUT -p tcp -s 192.168.1.191 -j REDIRECT --to-port 1008
+
+iptables -t nat -D PREROUTING -p tcp -s 192.168.1.191 -j REDIRECT --to-port 1008
+#iptables -t nat -D OUTPUT -p tcp -s 192.168.1.191 -j REDIRECT --to-port 1008
+
+tcpdump src 192.168.1.191
+
+! -d ec2-54-183-85-181.us-west-1.compute.amazonaws.com
+
+iptables -t nat -A PREROUTING -p tcp -s 192.168.1.191 ! -d 54.183.85.181 -j REDIRECT --to-port 1008
+
+iptables -t nat -D PREROUTING -p tcp -s 192.168.1.191 ! -d 54.183.85.181 -j REDIRECT --to-port 1008
